@@ -26,17 +26,17 @@ int main() {
     while (i < ARR_SIZE) {
         puts("Enter a number but press 'Ctrl D' to finish and find the sum: ");
         val = get_input(&exit_signal);
-        printf("Exit Signal: %d\n", exit_signal);
+        // printf("Exit Signal: %d\n", exit_signal);
 
         if (val != 0) {
             store_input[i] = val;
-            printf("store[%d] = %d\n", i, store_input[i]);
+            // printf("store[%d] = %d\n", i, store_input[i]);
         }
         else {
             // if case for when 0 is entered
             if (exit_signal == 1) {
                 store_input[i] = val;
-                printf("store[%d] = %d\n", i, store_input[i]);
+                // printf("store[%d] = %d\n", i, store_input[i]);
             } else {
                 puts("You have entered an invalid value.\n");
                 break;
@@ -44,6 +44,7 @@ int main() {
         }
         i += 1;
     }
+    printf("You have reached the maximum array size.\n");
     sum = get_sum(store_input, i);
     printf("The final sum: %d\n", sum);
 
@@ -61,29 +62,29 @@ int get_input(int* exit_signal) {
     char str_input[BUFFER];
     char c;
 
-    // case when user presses Ctrl-D
-    if(fgets(str_input, BUFFER, stdin) != NULL){
-        if (strlen(str_input) >= BUFFER) {
+    // case when user doesn't presses Ctrl-D
+    while (fgets(str_input, BUFFER, stdin) != NULL){
+        // case when the input exceeds the buffer
+        if (strlen(str_input) >= BUFFER || (str_input[strlen(str_input) - 1] != '\n')) {
             printf("Error: you have exceeded the buffer.");
             *exit_signal = 0;
             return 0;
         }
-        if (strlen(str_input) < BUFFER) {
+        else if (strlen(str_input) < BUFFER) {
             // checks if input value == 0 and if so, set exit signal to don't exit
             if (*str_input == '0') {
-                *exit_signal = 1; // don't exit
-                printf("dont exit");
+                *exit_signal = 1;
                 return atoi(str_input);
             }
             // checks if input value are alphabets
-            if (atoi(str_input) == 0) {
+            else if (atoi(str_input) == 0) {
                 *exit_signal = 0;
                 return atoi(str_input);
             }
             *exit_signal = 1;
-            printf("case 1\n");
             return atoi(str_input);
         }
+        // case when user presses Ctrl-D
         else {
             *exit_signal = 0;
             return 0;
