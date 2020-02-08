@@ -26,17 +26,15 @@ int main() {
     while (i < ARR_SIZE) {
         puts("Enter a number but press 'Ctrl D' to finish and find the sum: ");
         val = get_input(&exit_signal);
-        // printf("Exit Signal: %d\n", exit_signal);
 
+        // since atoi(alphabet) returns 0, catch when alphabets are entered
         if (val != 0) {
             store_input[i] = val;
-            // printf("store[%d] = %d\n", i, store_input[i]);
         }
         else {
             // if case for when 0 is entered
             if (exit_signal == 1) {
                 store_input[i] = val;
-                // printf("store[%d] = %d\n", i, store_input[i]);
             } else {
                 puts("You have entered an invalid value.\n");
                 break;
