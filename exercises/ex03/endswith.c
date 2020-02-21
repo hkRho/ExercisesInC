@@ -27,8 +27,19 @@ returns: 1 if true, 0 otherwise
 */
 int endswith(char *s, char *suffix)
 {
-    // TODO: Fill this in!
-    return 0;
+    // case when suffix is longer than s
+    if (strlen(suffix) > strlen(s)) {
+        return 0;
+    }
+
+    char* str = strstr(s, suffix);
+    int cmp = strcmp(str, suffix);
+
+    if (str != NULL && cmp == 0) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 
@@ -36,6 +47,7 @@ int endswith(char *s, char *suffix)
 */
 void test_endswith(char *s1, char *s2, int expected) {
     int got = endswith(s1, s2);
+    printf("Got: %i\n", got);
     assert(got == expected);
 }
 
