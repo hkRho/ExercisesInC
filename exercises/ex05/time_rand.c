@@ -52,6 +52,12 @@ double time_func(int iters, float(*func)())
     return t1 - t0;
 }
 
+/* Compute the total time used by a function.
+   Identical to time_func except the func is a double.
+
+iters: number of times to call the function
+func: function to call
+*/
 double time_func2(int iters, double(*func)())
 {
     int i;

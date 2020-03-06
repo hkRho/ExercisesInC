@@ -7,6 +7,7 @@
                     539.829000 ms 	 random_float
                     2083.817000 ms 	 my_random_double
                     600.033000 ms 	 random_double
+                    
 3. The random number generator "dummy" is the fastest with 175.370000 ms.
 
 4. "random_double" is faster than "my_random_double". "my_random_double" takes
