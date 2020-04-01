@@ -178,6 +178,7 @@ int hash_hashable(Hashable *hashable)
 */
 int equal_int (void *ip, void *jp)
 {
+    // FILL TIS IN!
     int *p1 = (int *) ip;
     int *p2 = (int *) jp;
     if (p1 == p2) {
@@ -197,6 +198,11 @@ int equal_int (void *ip, void *jp)
 int equal_string (void *s1, void *s2)
 {
     // FILL THIS IN!
+    char *str1 = (char *) s1;
+    char *str2 = (char *) s2;
+    if (strcmp(str1, str2) == 0) {
+        return 1;
+    }
     return 0;
 }
 
@@ -368,12 +374,21 @@ void print_lookup(Value *value)
 
 int main ()
 {
-    int x = 5;
-    int y = 5;
-    void *p1 = x;
-    void *p2 = y;
+    // int x = 5;
+    // int y = 5;
+    // void *p1 = x;
+    // void *p2 = y;
+    //
+    // int res = equal_int(p1, p2);
+    // printf("res: %i\n", res);
 
-    int res = equal_int(p1, p2);
+    // test code for equal_string
+    char *s1 = "hi";
+    char *s2 = "hi";
+    void *p1 = s1;
+    void *p2 = s2;
+
+    int res = equal_string(p1, p2);
     printf("res: %i\n", res);
 
     Hashable *hashable1 = make_hashable_int (1);
