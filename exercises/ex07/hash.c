@@ -178,7 +178,7 @@ int hash_hashable(Hashable *hashable)
 */
 int equal_int (void *ip, void *jp)
 {
-    // FILL TIS IN!
+    // FILL THIS IN!
     int *p1 = (int *) ip;
     int *p2 = (int *) jp;
     if (p1 == p2) {
@@ -218,7 +218,8 @@ int equal_string (void *s1, void *s2)
 int equal_hashable(Hashable *h1, Hashable *h2)
 {
     // FILL THIS IN!
-    return 0;
+    // must use ->equal and not == because -> deals with different types (e.g. int/string)
+    return h1->equal(h1->key, h2->key);
 }
 
 
@@ -307,6 +308,12 @@ Node *prepend(Hashable *key, Value *value, Node *rest)
 Value *list_lookup(Node *list, Hashable *key)
 {
     // FILL THIS IN!
+    while (list != NULL) {
+        if (key == list->key){
+            return list->value;
+        }
+        list = list->next;
+    }
     return NULL;
 }
 
@@ -352,6 +359,18 @@ void print_map(Map *map)
 void map_add(Map *map, Hashable *key, Value *value)
 {
     // FILL THIS IN!
+    Node *new_node;
+
+    // list to add new key, value pair is not empty
+    if (map->lists[hash_hashable(key) % map->n]) {
+        // can use prepend and make_node interchangeably
+        new_node = make_node(key, value, map->lists[hash_hashable(key) % map->n]);
+    }
+    // list to add new key, value is empty
+    else {
+        new_node = make_node(key, value, NULL);
+    }
+    map->lists[hash_hashable(key) % map->n] = new_node;
 }
 
 
@@ -359,7 +378,7 @@ void map_add(Map *map, Hashable *key, Value *value)
 Value *map_lookup(Map *map, Hashable *key)
 {
     // FILL THIS IN!
-    return NULL;
+    return list_lookup(map->lists[hash_hashable(key) % map->n], key);
 }
 
 
@@ -374,23 +393,6 @@ void print_lookup(Value *value)
 
 int main ()
 {
-    // int x = 5;
-    // int y = 5;
-    // void *p1 = x;
-    // void *p2 = y;
-    //
-    // int res = equal_int(p1, p2);
-    // printf("res: %i\n", res);
-
-    // test code for equal_string
-    char *s1 = "hi";
-    char *s2 = "hi";
-    void *p1 = s1;
-    void *p2 = s2;
-
-    int res = equal_string(p1, p2);
-    printf("res: %i\n", res);
-
     Hashable *hashable1 = make_hashable_int (1);
     Hashable *hashable2 = make_hashable_string ("Apple");
     Hashable *hashable3 = make_hashable_int (2);
