@@ -9,7 +9,7 @@ License: GNU GPLv3
 #include <stdlib.h>
 #include <pthread.h>
 
-#define NUM_CHILDREN 5
+#define NUM_CHILDREN 7
 
 /* Print an error message and exit.
 */
@@ -104,3 +104,27 @@ int main()
     printf("Final value of counter is %d\n", shared->counter);
     return 0;
 }
+
+/*
+2. The final value of the counter is correct because the total number of times
+   the counter is incremented is equal to the NUM_CHILDREN. Also, the threads
+   or the operation in this code is atomic.
+
+3. This is an example of the output of ./counter:
+
+    counter = 0
+    counter = 0
+    counter = 0
+    counter = 3
+    counter = 0
+    counter = 5
+    counter = 5
+    Final value of counter is 7
+
+   From the printed values of the counter not incrementing one by one,
+   concurrency of the threads can be observed. This behavior is due to some of
+   the threads printing the value of the counter variable before the increment
+   or after the increment. In the case where we want to see the exact counter
+   value for each iteration, this would be considered as a synchronization error
+   which can be resolved with semaphores, mutexes, or condition variables.
+*/
