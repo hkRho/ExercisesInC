@@ -69,7 +69,7 @@ void join_thread(pthread_t thread)
 
 void child_code(Shared *shared)
 {
-    printf("Starting child at counter %d\n", shared->counter);
+    // printf("Starting child at counter %d\n", shared->counter);
 
     while (1) {
         if (shared->counter >= shared->end) {
@@ -79,7 +79,7 @@ void child_code(Shared *shared)
         shared->counter++;
 
         if (shared->counter % 10000 == 0) {
-            printf("%d\n", shared->counter);
+            // printf("%d\n", shared->counter);
         }
     }
 }
@@ -88,7 +88,7 @@ void *entry(void *arg)
 {
     Shared *shared = (Shared *) arg;
     child_code(shared);
-    printf("Child done.\n");
+    // printf("Child done.\n");
     pthread_exit(NULL);
 }
 
@@ -96,12 +96,12 @@ void check_array(Shared *shared)
 {
     int i, errors=0;
 
-    printf("Checking...\n");
+    // printf("Checking...\n");
 
     for (i=0; i<shared->end; i++) {
         if (shared->array[i] != 1) errors++;
     }
-    printf("%d errors.\n", errors);
+    // printf("%d errors.\n", errors);
 }
 
 int main()
@@ -122,3 +122,31 @@ int main()
     check_array(shared);
     return 0;
 }
+
+/*
+2. Use the Makefile to compile the program and run it. Do any syncronization errors occur?
+    -----
+    Starting child at counter 0
+    10000
+    Starting child at counter 0
+    20000
+    20000
+    30000
+    ...
+    990000
+    990000
+    1000000
+    1000000
+    Child done.
+    Child done.
+    Checking...
+    129393 errors.
+    -----
+   There are syncronization errors happening. This error comes from the while
+   loop withiin the child_code(), where the order of which shared->counter++; is
+   executed (whether it is the current thread or another thread that is called
+   with shared->array[shared->counter]++;) is not secured.
+
+4.
+
+*/
