@@ -72,17 +72,15 @@ int main(void) {
         printf("\nWhat is %d times %d? ", a, b);
 
         // set (or reset) the alarm
-        alarm(5);   
+        alarm(5);
         // when alarm runs out, it calls times_up which sets the end_flag == -1
         // then the end flag is caught at the end of the outer while loop
         // which is after the additional question
 
         // get the answer
-        while(1) {
-	        char *ret = fgets(txt, 4, stdin);
-            if (ret) {  // if an answer is inputted, break out of this while loop
-                break;
-            }
+        while (1) {
+            char *ret = fgets(txt, 4, stdin);
+            if (ret) break;
         }
         answer = atoi(txt);
 

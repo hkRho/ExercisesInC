@@ -8,6 +8,7 @@ License: GNU GPLv3
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include "mutex.h"
 
 #define NUM_CHILDREN 2
 
@@ -27,6 +28,7 @@ void *check_malloc(int size)
 }
 
 typedef struct {
+    Mutex *mutex;
     int counter;
     int end;
     int *array;
@@ -37,6 +39,7 @@ Shared *make_shared(int end)
     int i;
     Shared *shared = check_malloc(sizeof(Shared));
 
+    shared->mutex = make_mutex();
     shared->counter = 0;
     shared->end = end;
 
@@ -72,7 +75,9 @@ void child_code(Shared *shared)
     // printf("Starting child at counter %d\n", shared->counter);
 
     while (1) {
+        mutex_lock(shared->mutex);
         if (shared->counter >= shared->end) {
+            mutex_unlock(shared->mutex);
             return;
         }
         shared->array[shared->counter]++;
@@ -81,6 +86,7 @@ void child_code(Shared *shared)
         if (shared->counter % 10000 == 0) {
             // printf("%d\n", shared->counter);
         }
+        mutex_unlock(shared->mutex);
     }
 }
 
@@ -96,8 +102,8 @@ void check_array(Shared *shared)
 {
     int i, errors=0;
 
-
     // printf("Checking...\n");
+
     for (i=0; i<shared->end; i++) {
         if (shared->array[i] != 1) errors++;
     }
@@ -122,41 +128,3 @@ int main()
     check_array(shared);
     return 0;
 }
-
-/*
-2. Use the Makefile to compile the program and run it. Do any syncronization errors occur?
-    -----
-    Starting child at counter 0
-    10000
-    Starting child at counter 0
-    20000
-    20000
-    30000
-    ...
-    990000
-    990000
-    1000000
-    1000000
-    Child done.
-    Child done.
-    Checking...
-    129393 errors.
-    -----
-   There are syncronization errors happening. This error comes from the while
-   loop withiin the child_code(), where the order of which shared->counter++; is
-   executed (whether it is the current thread or another thread that is called
-   with shared->array[shared->counter]++;) is not secured.
-
-4. After running $ time ./counter_array:
-   real	0m0.061s
-   user	0m0.099s
-   sys	0m0.004s
-
-   After running $ time ./counter_array_mutex:
-   real	0m0.167s
-   user	0m0.215s
-   sys	0m0.101s
-
-   I'm unsure how to understand how much overhead the synchronization imposes
-   from running the two time commands.
-*/
